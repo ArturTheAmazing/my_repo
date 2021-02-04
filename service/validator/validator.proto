@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = ".;validator";
+
+package validator;
+
+// The request message containing string to validate
+message ValidationRequest{
+    string input = 1;
+}
+
+// The response message containing whether the received input was valid
+message ValidationResponse{
+    bool resp = 1;
+}
+
+// The response message containing the fixed input
+message FixResponse {
+    string output = 1;
+}
+
+service Validator {
+    rpc Validate (ValidationRequest) returns (ValidationResponse) {}
+    rpc Fix (ValidationRequest) returns (FixResponse) {}
+}

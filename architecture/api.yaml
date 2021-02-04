@@ -1,0 +1,103 @@
+swagger: "2.0"
+info:
+  description: "Описание API сервисов для платежного проекта."
+  version: "1.0.0"
+  title: "Платежный проект"
+  contact:
+    email: "dilonml@gmail.com"
+tags:
+  - name: "payment service"
+    description: "Сервис получения одобрения банка"
+schemes:
+  - "https"
+paths:
+  /getApproval:
+    post:
+      tags:
+        - "payment service"
+      summary: "Отправка запроса в банк-эмитент"
+      description: ""
+      operationId: "approval"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/ApprovalRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApprovalResponse"
+        "401":
+          description: "Unauthorized"
+        "405":
+          description: "Invalid input"
+        "500":
+          description: "Internal server error"
+definitions:
+  Card:
+    type: "object"
+    required:
+      - "number"
+      - "holder"
+      - "date"
+      - "cvc"
+      - "issuer"
+    properties:
+      number:
+        type: "string"
+      holder:
+        type: "string"
+      date:
+        type: "string"
+      cvc:
+        type: "integer"
+        format: "int8"
+      issuer:
+        type: "string"
+        description: "Банк-эмитент платежного средства"
+    xml:
+      name: "Card"
+  Order:
+    type: "object"
+    required:
+      - "price"
+    properties:
+      price:
+        type: "integer"
+        format: "int32"
+    xml:
+      name: "Order"
+  ApprovalRequest:
+    type: "object"
+    required:
+      - "card"
+      - "order"
+    properties:
+      card:
+        $ref: "#/definitions/Card"
+      order:
+        $ref: "#/definitions/Order"
+    xml:
+      name: "ApprovalRequest"
+  ApprovalResponse:
+    type: "object"
+    required:
+      - "approved"
+    properties:
+      approved:
+        type: "boolean"
+      transaction:
+        type: "string"
+      error:
+        type: "string"
+      comment:
+        type: "string"
+    xml:
+      name: "ApprovalResponse"
